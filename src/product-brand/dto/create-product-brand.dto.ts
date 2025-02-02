@@ -1,3 +1,5 @@
+import { User } from "../../auth/schemas/user.schema"
+
 export class CreateProductBrandDto{
     readonly brand_name: string
     readonly brand_code: string
@@ -5,5 +7,6 @@ export class CreateProductBrandDto{
     readonly description: string
     readonly uom: string
     readonly is_delete: boolean
+    readonly created_by: User
 
 }

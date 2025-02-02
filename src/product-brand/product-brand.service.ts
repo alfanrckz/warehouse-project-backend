@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ProductBrand } from './schemas/productBrand.schema';
 import * as mongoose from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ProductBrandService {
@@ -31,8 +32,9 @@ export class ProductBrandService {
         }
     }
 
-    async create(productBrand: ProductBrand): Promise<ProductBrand>{
-        const res = await this.productBrandModel.create(productBrand)
+    async create(productBrand: ProductBrand, user: User): Promise<ProductBrand>{
+        const data = Object.assign(productBrand, {created_by: user._id})
+        const res = await this.productBrandModel.create(data)
         return res;
     }
 

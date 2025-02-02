@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ProductBrandService } from './product-brand.service';
 import { ProductBrand } from './schemas/productBrand.schema';
 import { CreateProductBrandDto } from './dto/create-product-brand.dto';
 import { UpdateProductBrandDto } from './dto/update-product-brand.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('product-brand')
 export class ProductBrandController {
@@ -10,6 +11,7 @@ export class ProductBrandController {
     constructor(private productBrandService : ProductBrandService){}
 
     @Get()
+    @UseGuards(AuthGuard())
     async getAllProducts(
         @Query('brand_name') brand_name?: string,
         @Query('page') page: number = 1,
@@ -19,13 +21,16 @@ export class ProductBrandController {
     }
 
     @Post()
+    @UseGuards(AuthGuard())
     async createProductBrand(
-        @Body() productBrand: CreateProductBrandDto
+        @Body() productBrand: CreateProductBrandDto,
+        @Req() req,
     ): Promise<ProductBrand>{
-        return this.productBrandService.create(productBrand)
+        return this.productBrandService.create(productBrand, req.user)
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard())
     async getProductById(
         @Param('id')
         id: string
@@ -34,6 +39,7 @@ export class ProductBrandController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard())
     async updateProductBrand(
         @Param('id')
         id: string,
@@ -43,6 +49,7 @@ export class ProductBrandController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard())
     async deleteProductBrand(
         @Param('id')
         id: string
